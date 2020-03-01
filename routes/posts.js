@@ -11,7 +11,7 @@ router.get('/new', (req, res, next) => {
   res.send('NEW /posts/new')
 })
 
-/* post posts create /posts  */
+/* post posts create /posts/:id  */
 router.post('/:id', (req, res, next) => {
   res.send('CREATE /posts/:id')
 })
@@ -33,7 +33,7 @@ router.put('/:id', (req, res, next) => {
 
 /* delete posts destroy /posts/:id  */
 router.delete('/:id', (req, res, next) => {
-  res.send('UPDATE /posts/:id')
+  res.send('DELETE /posts/:id')
 })
 
 module.exports = router;
