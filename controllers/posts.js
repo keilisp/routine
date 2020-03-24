@@ -43,11 +43,13 @@ module.exports = {
   async postUpdate(req, res, next) {
     let post = await Post.findById(req.params.id);
     if (req.body.deleteImages && req.body.deleteImages.length) {
-      let deleteImages = req.body.deleteImages;
+      let deleteImages = req.ody.deleteImages;
 
       for (const public_id of deleteImages) {
+        //delete images from cloudinary
         await cloudinary.v2.destroy(public_id);
 
+        //delete images from post.images
         for (const image of post.images) {
           if (image.public_id === public_id) {
             let index = post.images.indexOf(image);
@@ -56,10 +58,28 @@ module.exports = {
         }
       }
     }
-
+    if (req.files) {
+      //upload images
+      for (const file of req.files) {
+        let image = await cloudinary.v2.uploader.upload(file.path);
+        //add images to post.images array
+        post.images.push({
+          url: image.secure_url,
+          public_id: image.public_id
+        });
+      }
+    }
+    // update the post with new any new properties
+    post.title = req.body.post.title;
+    post.description = req.body.post.description;
+    post.price = req.body.post.price;
+    post.location = req.body.post.location;
+    //save the updated post into the db
+    post.save();
+    //redirect to posts/
     res.redirect(`/posts/${post.id}`);
   },
-  // Post Destroy
+  // Post Destroyuu
   async postDestroy(req, res, next) {
     await Post.findByIdAndRemove(req.params.id);
     res.redirect("/posts");
