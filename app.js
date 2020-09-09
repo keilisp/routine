@@ -1,4 +1,5 @@
 require("dotenv").config();
+
 const createError = require("http-errors");
 const express = require("express");
 const engine = require("ejs-mate");
@@ -26,7 +27,7 @@ mongoose.connect("mongodb://localhost:27017/periphery-shop-mapbox", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
-  useFindAndModify: false
+  useFindAndModify: false,
 });
 
 app.engine("ejs", engine);
@@ -38,7 +39,7 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(
   express.urlencoded({
-    extended: true
+    extended: true,
   })
 );
 app.use(methodOverride("_method"));
@@ -51,7 +52,7 @@ app.use(
   session({
     secret: "keyboard cat",
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
   })
 );
 
@@ -64,7 +65,7 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 // set local vars middleware
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   //set page title
   res.locals.title = "Periphery-shop";
   //set success flash message
@@ -83,12 +84,12 @@ app.use("/posts", postsRouter);
 app.use("/posts/:id/reviews", reviewsRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   // res.locals.message = err.message;
   // res.locals.error = req.app.get("env") === "development" ? err : {};
